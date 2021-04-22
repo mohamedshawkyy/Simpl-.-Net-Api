@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,
+				initial-scale=1,
+				shrink-to-fit=no">
+
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+</head>
+<body>
+    <div class="container">
+        <input type="number" name="Id" placeholder="id" />
+        <input type="text" name="Name" placeholder="name" />
+        <input type="number" name="Age" placeholder="age" />
+        <input type="text" name="Email" />
+        <input type="number" name="TrackId" placeholder="tid" />
+        <br />
+        <input type="button" value="Add" onclick="funAdd()" />
+        <input type="button" value="Update" onclick="funUpdate()" />
+
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                 
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Age
+                    </th>
+                    <th>
+                        TrackID
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody class="tbody">
+                
+            </tbody>
+        </table>
+   
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js">
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js">
+
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+
+    </script>
+
+
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js">
+
+    </script>
+    <script >
+        function funAdd() {
+            var obj =
+            {
+                Id: $("input[name='Id']").val(),
+                Name: $("input[name='Name']").val(),
+                Age: $("input[name='Age']").val(),
+                Email: $("input[name='Email']").val(),
+                TrackId: $("input[name='TrackId']").val(),
+
+            };
+            console.log(obj);
+            $.ajax({
+                url: "http://localhost:9999/api/student",
+                method: "Post",
+                contentType: "Application/Json;charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(obj),
+                success: function (result) {
+                    alert("Added");
+                    //$('#input[type="text"]').val('');
+                    getData();
+                   // $('#myModal').modal('hide');
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }  
+            });
+        }
+        function funUpdate() {
+            var obj =
+            {
+                Id: $("input[name='Id']").val(),
+                Name: $("input[name='Name']").val(),
+                Age: $("input[name='Age']").val(),
+                Email: $("input[name='Email']").val(),
+                TrackId: $("input[name='TrackId']").val(),
+
+            };
+            console.log(obj);
+            $.ajax({
+                url: "http://localhost:9999/api/student/" + $("input[name='Id']").val(),
+                method: "Put",
+                contentType: "Application/Json;charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(obj),
+                success: function (result) {
+                    alert("Updated");
+                    //$('#input[type="text"]').val('');
+                    getData();
+                    // $('#myModal').modal('hide');
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+
+        }
+        //Window.onload = () => getData();
+        $(document).ready(function () {
+            getData();
+        });
+
+                               //getd = $(function ()
+                               // {
+                               //     $.ajax({
+
+                               //         url: "http://localhost:9999/api/student",
+                               //         method: "get",
+                               //         success: function (data) {
+                               //             $('table').bootstrapTable({
+                               //                 data: data
+                               //                            });
+                               //         },
+                               //         error: function (error) {
+                               //             alert(error.status)
+                               //         }
+
+                               //     })
+                               //});
+
+        //var countChecked = function () {
+        //    var n = $("input:checked").length;
+        //   // $("div").text(n + (n === 1 ? " is" : " are") + " checked!");
+        //    var x = n + (n === 1 ? " is" : " are") + " checked!";
+        //    alert(x)
+        //};
+      
+        //$("input[type=checkbox]").on("click", countChecked);
+        //function DeleteMany() {
+        //    var selected = $("input:checked");
+        //    var  ids =[] ;
+        //    if (selected) {
+
+        //        for (var i = 0; i < selected.length; i++) {
+        //            ids.push(selected[i])
+        //        }
+        //    } else {
+        //        alert("none selected")
+        //    }
+           
+            
+        //   // console.log(selected[0].value);
+        //}
+
+        function Delete(Id) {
+            //alert("hi")
+            //var ans = confirm("Are you sure you want to delete this Record?");
+            //if (ans) {
+                $.ajax({
+                    url: "http://localhost:9999/api/student/" + Id,
+                    type: "DELETE",
+                    contentType: "application/json;charset=UTF-8",
+                    dataType: "json",
+                    success: function (result) {
+                        getData();
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    }
+                });
+          //  }
+        } 
+        function getData() {
+            $.ajax({
+
+                url: "http://localhost:9999/api/student",
+                method: "get",
+                success: function (data) {
+                    var html = '';
+                    $.each(data, function (key, item) {
+                        html += '<tr>';
+                        //html += '<td><input type="checkbox" value="' + item.Id + '"></td>'
+                        html += '<td>' + item.Id + '</td>';
+                        html += '<td>' + item.Name + '</td>';
+                        html += '<td>' + item.Email + '</td>';
+                        html += '<td>' + item.Age + '</td>';
+                        html += '<td>' + item.TrackId + '</td>';
+                        html += '<td>  <button class="btn btn-danger" onclick="Delete('+item.Id+')" >Delete</button></td>';
+                        html += '</tr>';
+                    });
+                    $('.tbody').html(html);  
+                },
+                error: function (error) {
+                    alert(error.status)
+                }
+
+            })
+            //DeleteManyStudents
+        }
+
+
+    </script>
+</body>
+</html>
